@@ -1,0 +1,88 @@
+From jkamienk@gmail.com Wed Nov 22 13:59:21 2023
+Date: Wed, 22 Nov 2023 13:59:09 -0300
+From: Juan Kamienkowski <jkamienk@gmail.com>
+To: vanesaflores0894@gmail.com, malenapirola@gmail.com, Victor Alexis Bettachini <bettachini@gmail.com>, tomasgianni11@gmail.com
+Cc: Sebastian Romano <sebastian.romano@gmail.com>, VARELA Hernán <hernanpvarela@gmail.com>, Álvaro López Malizia <alvaro.lopez.malizia@gmail.com>
+Subject: Devolución TP1 - DMCT
+
+Hola,
+
+Les damos la devolución del TP1 (ver comentarios abajo). La nota es 10 (diez),
+cualquier duda pueden escribirnos, acercarse este viernes, luego del examen o el
+martes siguiente.
+
+Saludos!
+
+--
+
+Comentarios:
+
+Describir  y graficar dataset:
+
+
+ * 
+
+    Podrían explorar un poco más la distribución de los píxeles en las imágenes
+    por cada grupo de arroz. 
+
+
+Extracción de características:
+
+
+ * 
+
+    No reducen la dimensionalidad con PCA.
+
+
+Silhoutte, SSE
+
+
+ * 
+
+    No muestran perfil de silhouette
+
+
+Comparar con label
+
+
+ * 
+
+    Parece confundir Arboreo e Ipsala y Jazmin y Basmat. No se entiende porque
+    no da mejor k=3. En todo caso con Jerárquico debería funcionar mejor.
+
+
+Visualizar los clusters
+
+
+ * 
+
+    Podrían haber colocado dos figuras de PCA en donde se visualicen las
+    etiquetas originales o las asignadas por los distintos algoritmos.
+
+
+ * 
+
+    Falta mostrar cuánto explican las componentes 1 y 2. Quizás no aportan mucho
+    y hay que ver más
+
+
+dos algoritmos de clustering
+
+
+ * 
+
+    DBSCAN no sirve mucho, y mostrar el resultado para un cluster es raro.
+
+
+ * 
+
+     En PAM no se por que no eligieron k=6 que era mejor según SSE-Silhouette.
+
+
+--
+Juan E Kamienkowski
+@ Laboratorio de Inteligencia Artificial Aplicada http://liaa.dc.uba.ar/
+@ Instituto de Ciencias de la Computación, FCEN,
+UBA-CONICET https://icc.fcen.uba.ar/
+@ Maestria de Data Mining, FCEyN, UBA http://datamining.dc.uba.ar/
+
