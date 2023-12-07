@@ -38,7 +38,9 @@
 \usepackage[pdftex]{graphicx}
 \usepackage{pgf}
 \usepackage{subcaption}
-\graphicspath{{./graphs/}}
+\graphicspath{{./fg/}}
+
+
 
 %% biblatex
 \usepackage[style = numeric, backend = biber, sorting = none, doi = false, isbn = false, url = true]{biblatex}
@@ -58,10 +60,14 @@
 \title{TP2: Redes en el cerebro}
 
 \author{
-  Víctor A.~Bettachini\\ %\thanks{Use footnote for providing further information about author (webpage, alternative address)---\emph{not} for acknowledging funding agencies.} \\
-  Datamining en ciencia y tecnología 2023\\
-  Especialización en Explotación de Datos y Descubrimiento del Conocimiento\\
+  Víctor A.~Bettachini\\
   \texttt{bettachini@gmail.com}
+  \And Vanesa Flores\\
+  \texttt{vanesaflores0894@gmail.com}
+  \And Tomás Gianni\\
+  \texttt{tomasgianni11@gmail.com}
+  \And Malena Pirola\\
+  \texttt{malenapirola@gmail.com}\\
 }
 
 
@@ -102,185 +108,163 @@ Este explotó funciones de las biblioteca NetworkX \cite{hagberg_exploring_2008}
 % Cada actividad realizada se describe bajo los titulos que figuran en el enunciado del trabajo práctico publicado en el
 
 \paragraph{Carga del conjunto de datos} 
-Los archivos provistos corresponden a los estadios de sueño N1, N2, N3 y despierto (W) para 18 sujetos.
+Los archivos provistos corresponden a los estadíos de sueño N1, N2, N3 y al estado despierto W para 18 sujetos.
 Estos estuvieron acompañados de una tabla que describe la denominación y  ubicación espacial las regiones en que se parcializó el cerebro.
-
-\paragraph{Promediado de matrices de correlación} de todos los sujetos para cada estadio del sueño.
-para cada estadío del sueño: despierto -W -, N1, N2 y N3.
 
 
 \section{Resultados}
 
 \subsection{Tarea 1: Visualización}
 
-
-\subsection{Manipulación de datos}
-
-\paragraph{Matriz de correlación}
-La matriz de adyacencia pesada que muestra la figura \ref{fg:matriz_correlación_pesada} corresponde a la condición de despierto para el sujeto número 2.
-
-Una medida que caracteriza un grafo es la densidad, $\delta$, definida como la razón entre los enlaces presentes sobre todos los posibles en el grafo.
-Para convertir la matriz en una de adyacencia binaria con una densidad de enlaces \(\delta = 0.8\) se discriminaron sus pesos con un umbral \(0.77997\) y así se obtuvo la matriz que muestra la figura \ref{fg:matriz_correlación_binaria}.
+\paragraph*{Promedio de correlaciones}
+Tras calcular el promedio de correlaciones de todos los sujetos para cada estadio del sueño, se obtuvieron las matrices de adyacencia que se muestran en la figura \ref{fg:matrizAdyacenciaEstadoSueño}.
 
 \begin{figure}[ht]
-	\centering
-	\begin{subfigure}[b]{0.3\textwidth}
-		\includegraphics[width= \linewidth]{matriz_correlación}
-		\caption{Pesada}
-		\label{fg:matriz_correlación_pesada}
-	\end{subfigure}
-	\begin{subfigure}[b]{0.25\textwidth}
-		\includegraphics[width= \linewidth]{matriz_correlación_binaria}
-		\caption{Binaria}
-		\label{fg:matriz_correlación_binaria}
-	\end{subfigure}
-	\caption{Matrices de correlación de las medias de señales para el sujeto número 2 despierto. 
+  \centering
+  \includegraphics[width= \linewidth]{matrizAdyacenciaEstadoSueño.png}
+  \caption{Matrices de adyacencia del promedio de las correlaciones de activación de volúmenes cerebrales en el estado despierto, W, y los tres estadíos de sueño. La numeración de los volúmenes es la utilizada en \cite{tzourio-mazoyer_automated_2002}.
 	}
-	\label{fg:matriz_correlación}
+	\label{fg:matrizAdyacenciaEstadoSueño}
 \end{figure}
 
 
-\paragraph{Grafo de la matriz de adyacencia binaria}
-No es totalmente conectado.
-Hay tres componentes conectadas de 92, 5 y 2 nodos en tanto que los 17 restantes están aislados.
-La distancia mínima entre nodos contabiliza cuantos intermedios deben atravesarse para ir de un nodo a otro.
-Esta medida para los aislados no tiene sentido, por lo en este grafo no puede obtenerse una distancia media $d$ a lo fines de tener una media de que tan ``conectado'' se presenta el grafo.
-Una medida alternativa es la eficiencia global.
-% Para el conjunto, no conectado, este valor parece bajo, $\approx 8\%$.
-% Y en el componente mayoritario, el de 92 nodos, este valor apenas se incrementa hasta un $\approx 12\%$. 
-
-
-\paragraph{Eficiencia global de conectividad}
-La suma de la inversa de es una medida de la eficiencia de conectividad global del grafo, $\mathrm{eff} = \frac{1}{n (n-1)} \sum_{i \neq j} \frac{1}{d(i,j)}$ \cite{ek_global_2015}.
-%Puesto que la razón de normalizar por $n (n-1)$ es para que la eficiencia de un grafo totalmente conectado sea $1$, en este grafo que no es totalmente conectado, realicé una estimación forma manual sobre la suma se realiza sobre los nodos que efectivamente están conectados.
-% Sumando la inversa de las distancias de los enlaces presentes y normalizando por su número se obtuvo un valor de $\mathrm{eff} \approx 0.389$.
-% No logré realizar un cálculo manual en línea con valores publicados para esta medida, pero 
-La biblioteca NetworkX provee una función que la calculó en $\approx 0.245$.
-
-
-\paragraph{Distribución de grado}
-El número de enlaces por nodo, o grado $k$, se distribuye en forma dispar.
-De un total de $534$ enlaces el grado mayor resultó $k_\textnormal{máx} = 30$, y un relativamente alto promedio $\langle k \rangle \approx 9.207$ aunque no hay que olvidar que no participan aquí los nodos aislados.
-El histograma de $k$ que muestra la figura \ref{fg:hist_k} que este $\langle k \rangle$ es representativo de la distribución.
-
-En una medida similar a la densidad que cuenta la proporción de enlaces sobre los posibles puede hacerse algo similar calculando la proporción de cuantos de los posibles enlaces entre primeros vecinos efectivamente se realizan.
-Esto se denomina coeficiente de agrupamiento (\emph{clustering}) por nodo $C_i$, cuyo promedio para este grafo es $\langle C_i \rangle \approx 0.527$. 
-Coloreando cada nodo según su $C_i$ y ubicándole por las coordenadas (y,z) en el cerebro se obtiene la figura \ref{fg:clustering}. 
+\paragraph*{Tamaño de la componente gigante} 
+El número de nodos de la componente gigante de cada grafo se muestra en la figura \ref{fg:númeroNodosComponenteGigante}.
 
 \begin{figure}[ht]
-	\centering
-	\begin{subfigure}[b]{0.25\textwidth}
-		\includegraphics[width= \linewidth]{histograma_k}
-		\caption{Histograma para $k$.
-		}
-		\label{fg:hist_k}
-	\end{subfigure}
-	\begin{subfigure}[b]{0.7\textwidth}
-		\includegraphics[width= \linewidth]{clustering}
-		\caption{número de nodo $i$ y su $C_i$.
-		}
-		\label{fg:clustering}
-	\end{subfigure}
-	\caption{Distribución de grado y coeficiente de agrupamiento.
+  \centering
+  \includegraphics[width= 0.8\linewidth]{númeroNodosComponenteGigante.png}
+  \caption{Número de nodos de la componente gigante de los grafos de los cuatro estados de sueño y el estado despierto.
 	}
-	\label{fg:distribución_de_grado}
+	\label{fg:númeroNodosComponenteGigante}
 \end{figure}
 
+Una inspección visual revela los siguientes saltos
 
-\paragraph{Grafos prototípicos}
-Tres algoritmos generaron grafos de conexiones entre el mismo número de nodos, $n = 116$, que de la matriz de adyacencia binaria.
-Se buscó que estos presente coeficientes de caracterización similares al del grafo de esta.
+\begin{table}[ht]
+	\centering
+\begin{tabular}{ccc}
+	\toprule
+	Estado de sueño & $\delta$  & $\Delta$ nodos \\
+	\midrule
+	W & $\approx 0.055$ &  $\approx 75 \rightarrow \approx 95$ \\
+	N1 & $\approx 0.065$ &  $\approx 75 \rightarrow \approx 95$ \\
+	N2 & $\approx 0.095$ &  $\approx 80 \rightarrow \approx 105$ \\
+	N3 & $\approx 0.03$ &  $\approx 65 \rightarrow \approx 90$ \\
+	\bottomrule
+\end{tabular}
+\bigskip
+\caption{Saltos en el tamaño de la componente gigante.}
+\label{tb:saltos}
+\end{table}
 
-El \textbf{algoritmo de Erdös–Rényi} enlaza un par de nodos si una probabilidad al azar supera un umbral \cite[sección 3.2]{albert-laszlo_barabasi_network_2016}.
-Estableciendo en función del $\langle k \rangle$ de la red original tal probabilidad como $p = \frac{\langle k \rangle}{n -1}$ se obtuvo una densidad prácticamente idéntica $\delta = 0.0808$ a la de la red original, $0.0801$, con una suma de enlaces, $539$, también muy cercana, $534$. 
-El coeficiente de agrupamiento $\langle C_i \rangle = 0.7986$ resulta bastante disímil con el $0.5271$ de la red original.
-Esta red azarosa, a diferencia de la original, mostró estar totalmente conectada, como se aprecia en la figura \ref{fg:erdos_renyi}. 
-En contrapartida, las redes reales suelen estar particionadas en múltiples componentes conectadas \cite[sección 3.7]{albert-laszlo_barabasi_network_2016}.
+Pendientes:\\
+Interpretar las curvas\\
+¿Qué indican los saltos?
 
-Si una red fuera perfectamente regular y todos los nodos tuvieran idéntica $k$, la distancia mínima entre dos nodos $d$, es decir cuantos intermedios debe atravesarse para enlazar uno con otro, seguiría una dependencia polinomial con $n$.
-En las redes reales $d$ presenta una dependencia mucho menor con $n$, con $\log(n)$ de hecho.
-Este fenómeno recibe el nombre de \emph{mundo pequeño}, o \emph{small-world}, por la sorpresiva poca distancia entre dos cualesquiera nodos de la red.
-Asimismo, en las reales, el coeficiente de agrupamiento $C_i$ suele ser más alto que en una red azarosa \cite[sección 3.9]{albert-laszlo_barabasi_network_2016}. 
-En respuesta a estas observaciones, el \textbf{algoritmo de Watts-Strogatz} extiende el modelo de un $k$ regular con una probabilidad de que un enlace cambie a nodo, lo que genera redes intermedias entre una regular y una azarosa.
-El número de enlaces total más cercano al de la red original, $580$, se obtuvo con $k = \mathrm{entero}(\langle k \rangle) + 1$. 
-Puesto que la $\delta = 0.870$ es insensible al parámetro de reconexión se lo ajustó buscando un $\langle C_i \rangle$ similar al de la red original.
-Este fluctúa por efectos azarosos pero se logró que este oscilara en torno al $\approx 0.527$ con una probabilidad de reconexión de $0.815$.
-Pero la red generada se presenta totalmente conectada y con un aspecto muy diferente a la original, como muestra la figura \ref{fg:watts_strogatz}. 
-Se pude generar una red con aspecto más similar incrementando la reconexión y así haciéndola más azarosa y similar a la de las mediciones, pero el resultante $\langle C_i \rangle$ se aleja del de esta.
 
-Hasta aquí había esquivado el tratar la distribución de los grados $k$ según el modelo prototípico de red.
-El proceso proceso binomial de una red azarosa para un $n \gg <k>$ presenta una distribución de Poisson \cite[sección 3.4]{albert-laszlo_barabasi_network_2016}.
-Se comentó ya el fenómeno de \emph{mundo pequeño}, pero no el los menores $d$ son fruto de la existencia de nodos con alto $k$ llamados \emph{hubs}.
-La distribución de probabilidad de $k$ se extiende mostrando frecuentemente una dependencia con una ley de potencias $p_k \sim k^{- \gamma}$, dando origen al designación de redes \emph{sin escala} o \emph{scale-free} \cite*[sección 4.2]{albert-laszlo_barabasi_network_2016}.
-El \textbf{algoritmo de Barabási-Albert} genera tales redes a partir de un parámetro $m$ que determina cuantos enlaces se agregan en cada paso.
-Se ajustó $m = \mathrm{entero} \left( \frac{\langle k \rangle}{2} \right) + 1$ para dar cuenta de no contar dos veces el número medio de enlaces de la red original y el uno adicional se agregó para que la red resultante tuviera el número de enlaces más similar a esta ($555$).
-Lo generado presentado en la figura \ref{fg:barabási_albert} también muestra una red conectada, pero con una similitud adicional con la original al mostrar claros \emph{hubs}.  
+\paragraph{Análisis de un salto}
+%La figura \ref{fg:saltoN2} ilustra el salto en el tamaño de la componente gigante en el promedio para los participantes del estudio en el estadío de sueño N2 que se produce en la vecindad de una $\delta = 0.095$.
+%
+%\begin{figure}[ht]
+%	\centering
+%	\includegraphics[width= 0.8\linewidth]{saltoN2.png}
+%	\caption{Detalle del salto en el número de nodos del promedio para el estado de sueño N2 en torno a $\delta = 0.095$.
+%	}
+%	\label{fg:saltoN2}
+%\end{figure}
+
+Para el salto que se produce para el estado de sueño N2 en la vecindad de una $\delta = 0.095$, se muestra en la figura \ref{fg:grafoSaltoN2} el grafo de las correlaciones previo y a posteriori.
 
 \begin{figure}[ht]
 	\centering
-	\begin{subfigure}[b]{0.32\textwidth}
-		\includegraphics[width= \linewidth]{erdos_renyi}
-		\caption{Azarosa}
-		\label{fg:erdos_renyi}
-	\end{subfigure}
-	\begin{subfigure}[b]{0.32\textwidth}
-		\includegraphics[width= \linewidth]{watts_strogatz}
-		\caption{Mundo pequeño}
-		\label{fg:watts_strogatz}
-	\end{subfigure}
-	\begin{subfigure}[b]{0.32\textwidth}
-		\includegraphics[width= \linewidth]{barabási_albert}
-		\caption{Sin escala}
-		\label{fg:barabási_albert}
-	\end{subfigure}
-	\caption{Grafos generados respetado el número de nodos y aproximadamente el de enlaces de la red original con algoritmos de (a) Erdös–Rényi, (b) Watts-Strogatz y (c) Barabási-Albert.}
-	\label{fg:prototípicas}
+	\includegraphics[width= \linewidth]{grafoSaltoN2.png}
+	\caption{Grafo de las correlaciones previo y a posteriori del salto en el número de nodos del promedio para el estado de sueño N2 en torno a $\delta = 0.095$.
+	}
+	\label{fg:grafoSaltoN2}
 \end{figure}
 
 
+\paragraph*{Variación del grado promedio}
 
-\paragraph{Coeficientes de grafos prototípicos}
-
-Las redes prototípicas comentadas en la sección anterior son una realización al azar.
-Para dar respuesta a que tan similares son los coeficientes que les caracterizan a los de la red producto de las mediciones se hicieron 1000 corridas de estos algoritmos a lo fines de realizar histogramas de del número medio de enlaces, $<k>$, el máximo número de estos, $\textnormal{máx} k$, el coeficiente de agrupamiento medio, $\langle C_i \rangle$, y la eficiencia de conectividad, $\mathrm{eff}$.
-
-En el caso de las redes azarosas generadas con el algoritmo de Erdös–Rényi, la figura \ref{fg:hist_poisson} muestra que el $<k>$ y los $\textnormal{máx} k$ los exceden ligeramente.
-Pero los $\langle C_i \rangle$ están muy por debajo y la $\mathrm{eff}$ por arriba de los de la red original indicados con líneas punteadas verticales.
-Lo primero no es extraño pues de hecho las redes al azar presentan sistemáticamente un $\langle C_i \rangle$ menor que las reales \cite[sección 3.9]{albert-laszlo_barabasi_network_2016}.
-Para Lo segundo espera un resultado opuesto, pues en las redes reales $d$ son menores que en la red azarosa esperaba que la suma de sus inversas fuera menor que en la red producto de las mediciones.
-Pienso que estoy cometiendo un error aquí.
+La figura \ref{fg:gradoPromedio} muestra una relación lineal entre el grado promedio, $\langle k \rangle$, de los grafos de los cuatro estados de sueño y el estado despierto.
+Esto es lógico pues la definición de densidad se da en función de la cantidad de enlaces que hay en la red, por lo que a mayor densidad, mayor cantidad de enlaces y por lo tanto mayor grado promedio.
+La expresión que las relaciona es $\delta = \frac{2L}{N(N-1)}$, donde $p$ es la densidad, $L$ es la cantidad de enlaces y $N$ es la cantidad de nodos. Si despejamos $L$ de esta expresión y la reemplazamos en la expresión de grado promedio, obtenemos que $\langle k \rangle = \frac{2 \delta (N-1)}{N}$, que es una función lineal de $\delta$.
 
 \begin{figure}[ht]
-  \centering
-  \includegraphics[width= \linewidth]{hist_poisson}
-  \caption{Magnitudes de las redes azarosas.}
-	\label{fg:hist_poisson}
+	\centering
+	\includegraphics[width= 0.8\linewidth]{gradoPromedio.png}
+	\caption{Grado promedio de los grafos de los cuatro estados de sueño y el estado despierto.
+	}
+	\label{fg:gradoPromedio}
 \end{figure}
 
-En el caso de las redes generadas con el algoritmo de Watts-Strogatz, la figura \ref{fg:hist_small_world} muestran un $\langle k \rangle$ superior al de la red producto de las mediciones pero unos $\textnormal{máx} k$ comparables.
-Puesto que se ajustó para que así fuera la concordancia con el coeficiente de agrupamiento medio es buena.
-Nuevamente la eficiencia global arroja un valor mucho mayor que el de la red original que no puedo explicar.
-Si no fuera por este desarreglo la red del tipo \emph{mundo pequeño} sería una buena candidata para representar el fenómeno que dio origen a la red original.
+
+\paragraph*{Coeficiente de clustering promedio}
+
+La figura \ref{fg:coeficienteClusteringPromedio} muestra una relación lineal entre el coeficiente de clustering promedio, $\langle C \rangle$, de los grafos de los cuatro estados de sueño y el estado despierto.
 
 \begin{figure}[ht]
-  \centering
-  \includegraphics[width= \linewidth]{hist_small_world}
-  \caption{Magnitudes de las redes \emph{mundo pequeño}.}
-	\label{fg:hist_small_world}
+	\centering
+	\includegraphics[width= 0.8\linewidth]{coeficienteClusteringPromedio.png}
+	\caption{Coeficiente de clustering promedio de los grafos de los cuatro estados de sueño y el estado despierto.
+	}
+	\label{fg:coeficienteClusteringPromedio}
 \end{figure}
 
-En el caso de las redes generadas con el algoritmo de Barabási-Albert, la figura \ref{fg:hist_scale_free} muestran un $\langle k \rangle$ superior al de la red producto de las mediciones y unos $\textnormal{máx} k$ un tanto mayores pero comparables.
-En contrapartida el coeficiente de agrupamiento medio es mucho menor que el de la red original.
-Y nuevamente no puedo explicar la eficiencia global mayor que la de la red original.
+
+\paragraph*{Eficiencia global}
+
+La figura \ref{fg:eficienciaGlobal} muestra una relación lineal entre la eficiencia global de los grafos de los cuatro estados de sueño y el estado despierto.
 
 \begin{figure}[ht]
-  \centering
-  \includegraphics[width= \linewidth]{hist_scale_free}
-  \caption{Magnitudes de las redes \emph{sin escala}.}
-	\label{fg:hist_scale_free}
+	\centering
+	\includegraphics[width= 0.8\linewidth]{eficienciaGlobal.png}
+	\caption{Eficiencia global de los grafos de los cuatro estados de sueño y el estado despierto.
+	}
+	\label{fg:eficienciaGlobal}
 \end{figure}
 
 
+\paragraph*{Centralidad de autovector}
+
+La figura \ref{fg:centralidadAutovector} muestra una relación lineal entre la centralidad de autovector de los grafos de los cuatro estados de sueño y el estado despierto.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width= \linewidth]{centralidadDensidadCeroPuntoDoce.png}
+	\caption{Centralidad de autovector de los grafos de los cuatro estados de sueño y el estado despierto.
+	}
+	\label{fg:centralidadAutovector}
+\end{figure}
+
+
+\subsection{Tarea 2: Comunidades y coeficiente de modularidad}
+
+\paragraph*{Coeficiente de modularidad en función de $\delta$}
+
+La figura \ref{fg:coeficienteModularidad} muestra una relación lineal entre el coeficiente de modularidad de los grafos de los cuatro estados de sueño y el estado despierto.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width= 0.8\linewidth]{coeficienteModularidad.png}
+	\caption{Coeficiente de modularidad en función de $\delta$ para los grafos de los cuatro estados de sueño y el estado despierto.
+	}
+	\label{fg:coeficienteModularidad}
+\end{figure}
+
+
+\paragraph*{Variación de cantidad de comunidades con $\delta$}
+
+La figura \ref{fg:cantidadComunidades} muestra una relación lineal entre la cantidad de comunidades de los grafos de los cuatro estados de sueño y el estado despierto.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width= 0.8\linewidth]{cantidadComunidades.png}
+	\caption{Cantidad de comunidades en función de $\delta$ para los grafos de los cuatro estados de sueño y el estado despierto.
+	}
+	\label{fg:cantidadComunidades}
+\end{figure}
 
 
 % \section{Discusión y conclusiones}
